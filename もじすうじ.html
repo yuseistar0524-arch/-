@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ひらがな・数字ランダム生成</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 30px 15px;
+        background-color: #f5f5f5;
+    }
+
+    h1 {
+        font-size: clamp(22px, 5vw, 28px);
+        margin-bottom: 40px;
+    }
+
+    #hiragana {
+        font-size: clamp(60px, 18vw, 100px);
+        margin: 30px 0;
+    }
+
+    #number {
+        font-size: clamp(50px, 15vw, 70px);
+        margin: 30px 0;
+    }
+
+    button {
+        font-size: 20px;
+        padding: 15px 25px;
+        margin: 8px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    button:first-of-type {
+        background-color: #4285f4;
+        color: white;
+    }
+
+    button:last-of-type {
+        background-color: #dddddd;
+        color: #222222;
+    }
+
+    button:active {
+        opacity: 0.7;
+    }
+</style>
+</head>
+
+<body>
+    <h1>ひらがな・数字ランダム生成</h1>
+
+    <div id="hiragana">ひらがな</div>
+    <div id="number">数字</div>
+
+    <button onclick="generate()">生成する</button>
+    <button onclick="reset()">リセット</button>
+
+    <script>
+        // ひらがなのリスト
+        const hiragana = [
+            // 清音
+            ..."あいうえおかきくけこさしすせそたちつてとなにぬねの",
+            ..."はひふへほまみむめもやゆよらりるれろわ",
+
+            // 濁音
+            ..."がぎぐげござじずぜぞだでどばびぶべぼ",
+
+            // 半濁音
+            ..."ぱぴぷぺぽ",
+
+            // その他
+            "ゔ"
+        ];
+
+        // 数字の出現確率を設定
+        const numbers = [
+            { value: 1, weight: 3.75 },
+            { value: 2, weight: 3.75 },
+            { value: 3, weight: 10 },
+            { value: 4, weight: 10 },
+            { value: 5, weight: 10 },
+            { value: 6, weight: 10 },
+            { value: 7, weight: 10 },
+            { value: 8, weight: 10 },
+            { value: 9, weight: 10 },
+            { value: 10, weight: 3.75 },
+            { value: 11, weight: 3.75 },
+            { value: 12, weight: 3.75 },
+            { value: 13, weight: 3.75 },
+            { value: 14, weight: 3.75 },
+            { value: 15, weight: 3.75 }
+        ];
+
+       // ランダムにひらがなと数字を生成
+        function generate() {
+    // ひらがなをランダムに選ぶ
+            const randomHiragana =
+                hiragana[Math.floor(Math.random() * hiragana.length)];
+
+    // 対応するカタカナに変換
+            const randomKatakana = String.fromCharCode(
+                randomHiragana.charCodeAt(0) + 0x60
+            );
+
+    // 数字を重みに基づいて選ぶ
+            const totalWeight = numbers.reduce(
+                (sum, item) => sum + item.weight, 0
+            );
+
+            let random = Math.random() * totalWeight;
+            let randomNumber;
+
+            for (const item of numbers) {
+                random -= item.weight;
+
+                if (random < 0) {
+                    randomNumber = item.value;
+                    break;
+                }
+            }
+
+    // ひらがな・カタカナをセットで表示
+            document.getElementById("hiragana").textContent =
+                randomHiragana + "・" + randomKatakana;
+
+    // 数字を表示
+            document.getElementById("number").textContent =
+                randomNumber;
+}
+
+        // 初期画面に戻す
+        function reset() {
+            document.getElementById("hiragana").textContent =
+                "ひらがな";
+
+            document.getElementById("number").textContent =
+                "数字";
+        }
+    </script>
+</body>
+</html>
